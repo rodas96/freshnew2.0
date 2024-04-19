@@ -1,0 +1,115 @@
+2024-04-19 01:20:02,722 - WARNING - The chromedriver version (123.0.6312.122) detected in PATH at /usr/local/bin/chromedriver might not be compatible with the detected chrome version (124.0.6367.62); currently, chromedriver 124.0.6367.60 is recommended for chrome 124.*, so it is advised to delete the driver in PATH and retry
+2024-04-19 01:20:03,274 - INFO - Initialization completed successfully.
+2024-04-19 01:20:04,259 - INFO - Search phrase 'surf' entered successfully.
+2024-04-19 01:20:04,316 - INFO - Topic checkbox 'Sports' selected.
+2024-04-19 01:20:04,355 - ERROR - Error in select_topic_type: Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=124.0.6367.62); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+0   chromedriver                        0x0000000100a204a4 chromedriver + 4326564
+1   chromedriver                        0x0000000100a1896c chromedriver + 4295020
+2   chromedriver                        0x0000000100644088 chromedriver + 278664
+3   chromedriver                        0x0000000100648abc chromedriver + 297660
+4   chromedriver                        0x000000010064a428 chromedriver + 304168
+5   chromedriver                        0x000000010064a4a0 chromedriver + 304288
+6   chromedriver                        0x0000000100681a28 chromedriver + 530984
+7   chromedriver                        0x000000010067cdd0 chromedriver + 511440
+8   chromedriver                        0x00000001006bf4f8 chromedriver + 783608
+9   chromedriver                        0x000000010067b4e4 chromedriver + 505060
+10  chromedriver                        0x000000010067bf5c chromedriver + 507740
+11  chromedriver                        0x00000001009e3a40 chromedriver + 4078144
+12  chromedriver                        0x00000001009e87f8 chromedriver + 4098040
+13  chromedriver                        0x00000001009ca5e4 chromedriver + 3974628
+14  chromedriver                        0x00000001009e9110 chromedriver + 4100368
+15  chromedriver                        0x00000001009bbbd4 chromedriver + 3914708
+16  chromedriver                        0x0000000100a09718 chromedriver + 4232984
+17  chromedriver                        0x0000000100a09894 chromedriver + 4233364
+18  chromedriver                        0x0000000100a185e0 chromedriver + 4294112
+19  libsystem_pthread.dylib             0x0000000198b42f94 _pthread_start + 136
+20  libsystem_pthread.dylib             0x0000000198b3dd34 thread_start + 8
+
+2024-04-19 01:20:04,383 - INFO - Option 'Newest' selected in the sort by dropdown.
+2024-04-19 01:20:04,383 - INFO - Search setup completed successfully.
+2024-04-19 01:20:12,741 - ERROR - Error in extract_news_data: Message: no such element: Unable to locate element: {"method":"css selector","selector":".promo-title"}
+  (Session info: chrome=124.0.6367.62); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+0   chromedriver                        0x0000000100a204a4 chromedriver + 4326564
+1   chromedriver                        0x0000000100a1896c chromedriver + 4295020
+2   chromedriver                        0x0000000100644088 chromedriver + 278664
+3   chromedriver                        0x0000000100686a80 chromedriver + 551552
+4   chromedriver                        0x000000010067cdd0 chromedriver + 511440
+5   chromedriver                        0x00000001006bf4f8 chromedriver + 783608
+6   chromedriver                        0x000000010067b4e4 chromedriver + 505060
+7   chromedriver                        0x000000010067bf5c chromedriver + 507740
+8   chromedriver                        0x00000001009e3a40 chromedriver + 4078144
+9   chromedriver                        0x00000001009e87f8 chromedriver + 4098040
+10  chromedriver                        0x00000001009ca5e4 chromedriver + 3974628
+11  chromedriver                        0x00000001009e9110 chromedriver + 4100368
+12  chromedriver                        0x00000001009bbbd4 chromedriver + 3914708
+13  chromedriver                        0x0000000100a09718 chromedriver + 4232984
+14  chromedriver                        0x0000000100a09894 chromedriver + 4233364
+15  chromedriver                        0x0000000100a185e0 chromedriver + 4294112
+16  libsystem_pthread.dylib             0x0000000198b42f94 _pthread_start + 136
+17  libsystem_pthread.dylib             0x0000000198b3dd34 thread_start + 8
+
+2024-04-19 01:20:16,601 - WARNING - The chromedriver version (123.0.6312.122) detected in PATH at /usr/local/bin/chromedriver might not be compatible with the detected chrome version (124.0.6367.62); currently, chromedriver 124.0.6367.60 is recommended for chrome 124.*, so it is advised to delete the driver in PATH and retry
+2024-04-19 01:20:17,077 - INFO - Initialization completed successfully.
+2024-04-19 01:20:18,058 - INFO - Search phrase 'surf' entered successfully.
+2024-04-19 01:20:18,115 - INFO - Topic checkbox 'Sports' selected.
+2024-04-19 01:20:18,145 - ERROR - Error in select_topic_type: Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=124.0.6367.62); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+0   chromedriver                        0x00000001025284a4 chromedriver + 4326564
+1   chromedriver                        0x000000010252096c chromedriver + 4295020
+2   chromedriver                        0x000000010214c088 chromedriver + 278664
+3   chromedriver                        0x0000000102150abc chromedriver + 297660
+4   chromedriver                        0x0000000102152428 chromedriver + 304168
+5   chromedriver                        0x00000001021524a0 chromedriver + 304288
+6   chromedriver                        0x0000000102189a28 chromedriver + 530984
+7   chromedriver                        0x0000000102184dd0 chromedriver + 511440
+8   chromedriver                        0x00000001021c74f8 chromedriver + 783608
+9   chromedriver                        0x00000001021834e4 chromedriver + 505060
+10  chromedriver                        0x0000000102183f5c chromedriver + 507740
+11  chromedriver                        0x00000001024eba40 chromedriver + 4078144
+12  chromedriver                        0x00000001024f07f8 chromedriver + 4098040
+13  chromedriver                        0x00000001024d25e4 chromedriver + 3974628
+14  chromedriver                        0x00000001024f1110 chromedriver + 4100368
+15  chromedriver                        0x00000001024c3bd4 chromedriver + 3914708
+16  chromedriver                        0x0000000102511718 chromedriver + 4232984
+17  chromedriver                        0x0000000102511894 chromedriver + 4233364
+18  chromedriver                        0x00000001025205e0 chromedriver + 4294112
+19  libsystem_pthread.dylib             0x0000000198b42f94 _pthread_start + 136
+20  libsystem_pthread.dylib             0x0000000198b3dd34 thread_start + 8
+
+2024-04-19 01:20:18,173 - INFO - Option 'Newest' selected in the sort by dropdown.
+2024-04-19 01:20:18,173 - INFO - Search setup completed successfully.
+2024-04-19 01:20:26,435 - WARNING - The chromedriver version (123.0.6312.122) detected in PATH at /usr/local/bin/chromedriver might not be compatible with the detected chrome version (124.0.6367.62); currently, chromedriver 124.0.6367.60 is recommended for chrome 124.*, so it is advised to delete the driver in PATH and retry
+2024-04-19 01:20:26,907 - INFO - Initialization completed successfully.
+2024-04-19 01:20:27,931 - INFO - Search phrase 'surf' entered successfully.
+2024-04-19 01:20:27,991 - INFO - Topic checkbox 'Sports' selected.
+2024-04-19 01:20:28,022 - ERROR - Error in select_topic_type: Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=124.0.6367.62); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+0   chromedriver                        0x0000000104ab44a4 chromedriver + 4326564
+1   chromedriver                        0x0000000104aac96c chromedriver + 4295020
+2   chromedriver                        0x00000001046d8088 chromedriver + 278664
+3   chromedriver                        0x00000001046dcabc chromedriver + 297660
+4   chromedriver                        0x00000001046de428 chromedriver + 304168
+5   chromedriver                        0x00000001046de4a0 chromedriver + 304288
+6   chromedriver                        0x0000000104715a28 chromedriver + 530984
+7   chromedriver                        0x0000000104710dd0 chromedriver + 511440
+8   chromedriver                        0x00000001047534f8 chromedriver + 783608
+9   chromedriver                        0x000000010470f4e4 chromedriver + 505060
+10  chromedriver                        0x000000010470ff5c chromedriver + 507740
+11  chromedriver                        0x0000000104a77a40 chromedriver + 4078144
+12  chromedriver                        0x0000000104a7c7f8 chromedriver + 4098040
+13  chromedriver                        0x0000000104a5e5e4 chromedriver + 3974628
+14  chromedriver                        0x0000000104a7d110 chromedriver + 4100368
+15  chromedriver                        0x0000000104a4fbd4 chromedriver + 3914708
+16  chromedriver                        0x0000000104a9d718 chromedriver + 4232984
+17  chromedriver                        0x0000000104a9d894 chromedriver + 4233364
+18  chromedriver                        0x0000000104aac5e0 chromedriver + 4294112
+19  libsystem_pthread.dylib             0x0000000198b42f94 _pthread_start + 136
+20  libsystem_pthread.dylib             0x0000000198b3dd34 thread_start + 8
+
+2024-04-19 01:20:28,051 - INFO - Option 'Newest' selected in the sort by dropdown.
+2024-04-19 01:20:28,051 - INFO - Search setup completed successfully.

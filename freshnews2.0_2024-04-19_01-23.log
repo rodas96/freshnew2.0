@@ -1,0 +1,43 @@
+2024-04-19 01:23:47,135 - WARNING - The chromedriver version (123.0.6312.122) detected in PATH at /usr/local/bin/chromedriver might not be compatible with the detected chrome version (124.0.6367.62); currently, chromedriver 124.0.6367.60 is recommended for chrome 124.*, so it is advised to delete the driver in PATH and retry
+2024-04-19 01:23:47,696 - INFO - Initialization completed successfully.
+2024-04-19 01:23:50,433 - INFO - Search phrase 'surf' entered successfully.
+2024-04-19 01:23:50,499 - INFO - Topic checkbox 'Sports' selected.
+2024-04-19 01:23:50,751 - INFO - Type checkbox 'Video' selected.
+2024-04-19 01:23:50,752 - INFO - News topic and type selected successfully.
+2024-04-19 01:23:50,780 - INFO - Option 'Newest' selected in the sort by dropdown.
+2024-04-19 01:23:50,780 - INFO - Search setup completed successfully.
+2024-04-19 01:23:54,247 - INFO - Extracted description from news: Watch L.A.
+2024-04-19 01:23:54,255 - INFO - Extracted timestamp from news: 08/02/2023
+2024-04-19 01:23:54,367 - INFO - Image downloaded and saved as LA_Times_Today:_Longboard_world_champion_defends_the_top_spot_at_the_U.S._Open_of_Surfing_in_Huntington_Beach.jpg in pictures
+2024-04-19 01:23:54,381 - INFO - Extracted description from news: Watch L.A.
+2024-04-19 01:23:54,386 - INFO - Extracted timestamp from news: 02/16/2022
+2024-04-19 01:23:54,456 - INFO - Image downloaded and saved as LA_Times_Today:_At_50,_Kelly_Slater_goes_for_twelfth_world_title.jpg in pictures
+2024-04-19 01:23:54,470 - INFO - Extracted description from news: At the 2019 U.S. Open of Surfing in Huntington Beach, L.A.
+2024-04-19 01:23:54,474 - INFO - Extracted timestamp from news: 08/04/2019
+2024-04-19 01:23:54,543 - INFO - Image downloaded and saved as The_vernacular_of_surf_slang.jpg in pictures
+2024-04-19 01:23:54,556 - INFO - Extracted description from news: Caroline Marks is the youngest surfer in history to qualify for the WSL Championship Tour.
+2024-04-19 01:23:54,560 - INFO - Extracted timestamp from news: 09/13/2018
+2024-04-19 01:23:55,652 - INFO - Image downloaded and saved as Caroline_Marks_makes_surfing_history.jpg in pictures
+2024-04-19 01:23:55,670 - ERROR - Failed to extract description from news: Message: no such element: Unable to locate element: {"method":"css selector","selector":".promo-description"}
+  (Session info: chrome=124.0.6367.62); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+0   chromedriver                        0x000000010447c4a4 chromedriver + 4326564
+1   chromedriver                        0x000000010447496c chromedriver + 4295020
+2   chromedriver                        0x00000001040a0088 chromedriver + 278664
+3   chromedriver                        0x00000001040e2a80 chromedriver + 551552
+4   chromedriver                        0x00000001040d8dd0 chromedriver + 511440
+5   chromedriver                        0x000000010411b4f8 chromedriver + 783608
+6   chromedriver                        0x00000001040d74e4 chromedriver + 505060
+7   chromedriver                        0x00000001040d7f5c chromedriver + 507740
+8   chromedriver                        0x000000010443fa40 chromedriver + 4078144
+9   chromedriver                        0x00000001044447f8 chromedriver + 4098040
+10  chromedriver                        0x00000001044265e4 chromedriver + 3974628
+11  chromedriver                        0x0000000104445110 chromedriver + 4100368
+12  chromedriver                        0x0000000104417bd4 chromedriver + 3914708
+13  chromedriver                        0x0000000104465718 chromedriver + 4232984
+14  chromedriver                        0x0000000104465894 chromedriver + 4233364
+15  chromedriver                        0x00000001044745e0 chromedriver + 4294112
+16  libsystem_pthread.dylib             0x0000000198b42f94 _pthread_start + 136
+17  libsystem_pthread.dylib             0x0000000198b3dd34 thread_start + 8
+
+2024-04-19 01:23:55,670 - ERROR - Error in extract_news_data: 'NoSuchElementException' object is not callable
