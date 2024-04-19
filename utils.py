@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+import csv
+import logging
 
 
 def get_month_year_back(months_back):
@@ -18,3 +20,11 @@ def generate_month_year_list(months_back):
             year -= 1
         month_year_list.append(datetime(current_year, month, 1).strftime("%m/%Y"))
     return month_year_list
+
+
+def write_to_csv(data, fieldnames, file_path):
+    with open(file_path, "w", newline="", encoding="utf-8") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(data)
+        logging.info(f"Data written to {file_path} successfully.")

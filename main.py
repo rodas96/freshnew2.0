@@ -1,14 +1,23 @@
 import logging
 from initialization import initilization
 from setup_search import setup_search
-from scrapper import extract_news_data, get_total_pages
-import csv
+from scraper import extract_news_data, get_total_pages
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from tenacity import retry, stop_after_attempt, wait_fixed
 from time import sleep
-from date_utils import generate_month_year_list
+from utils import generate_month_year_list, write_to_csv
+
+cols_name = [
+    "title",
+    "description",
+    "date",
+    "image_url",
+    "words_count",
+    "has_dollar",
+]
+output_path = "output/news_data.csv"
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(5))
@@ -48,21 +57,7 @@ def main():
                 logging.error(f"Error extracting data from page {number}: {str(e)}")
                 continue
 
-        # Write data to CSV file
-        with open("output/news_data.csv", "w", newline="", encoding="utf-8") as csvfile:
-            fieldnames = [
-                "title",
-                "description",
-                "date",
-                "image_url",
-                "words_count",
-                "has_dollar",
-            ]
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-            for item in news_data:
-                writer.writerow(item)
-
+        write_to_csv(news_data, cols_name, output_path)
         driver.quit()
         logging.info("Data extracted successfully.")
 

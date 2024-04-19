@@ -108,12 +108,17 @@ def extract_image(promo):
         image_element = promo.find_element(By.CLASS_NAME, "image")
         image_url = image_element.get_attribute("src")
         response = requests.get(image_url)
+        # Example:
+        if response.status_code != 200:
+            logging.warning(f"Failed to download image: {response.status_code}")
+            return None
 
         if response.status_code == 200:
-            try:
-                filename = f"{promo.text.split('\n')[1].split('.')[0][:10]}.jpg"
-            except IndexError:
-                filename = f"{promo.text.replace(' ', '_')[:10]}.jpg"
+            filename = (
+                f"{promo.text.split('\n')[1].split('.')[0][:10]}.jpg"
+                if promo.text
+                else f"image_{datetime.now().strftime('%Y%m%d%H%M%S')}.jpg"
+            )
             directory = "output/pictures"
             if not os.path.exists(directory):
                 os.makedirs(directory)
