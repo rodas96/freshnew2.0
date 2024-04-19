@@ -4,6 +4,7 @@ import json
 from selenium import webdriver
 import platform
 import os
+from selenium.webdriver.chrome.options import Options
 
 
 def initilization():
@@ -20,7 +21,9 @@ def initilization():
 
 
 def setup_logging():
-    log_file_name = datetime.datetime.now().strftime("freshnews2.0_%Y-%m-%d_%H-%M.log")
+    log_file_name = datetime.datetime.now().strftime(
+        "output/freshnews2.0_%Y-%m-%d_%H-%M.log"
+    )
     logging.basicConfig(
         filename=log_file_name,
         level=logging.INFO,
@@ -30,24 +33,35 @@ def setup_logging():
 
 def init_driver():
     try:
-        driver = webdriver.Chrome()
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--incognito")
+
+        driver = webdriver.Chrome(options=chrome_options)
         if not driver:
             raise Exception("Failed to initialize WebDriver")
         return driver
     except Exception as e:
+        logging.error(f"Failed to initialize WebDriver: {str(e)}")
         raise e("Failed to initialize WebDriver")
 
 
 def load_params():
     try:
-        with open("params.json", "r") as f:
+        with open("test1knews.json", "r") as f:
             params = json.load(f)
             if not params.get("search_phrase"):
                 raise ValueError("No search phrase provided in params.json")
         return params
     except FileNotFoundError:
+        logging.error("params.json not found")
         raise FileNotFoundError("params.json not found")
     except Exception as e:
+        logging.error(f"Failed to load parameters: {str(e)}")
         raise e("Failed to load parameters")
 
 

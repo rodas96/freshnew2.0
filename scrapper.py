@@ -2,38 +2,64 @@ from selenium.webdriver.common.by import By
 import logging
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import Select
 import os
 import requests
 from datetime import datetime
 import re
+from selenium.common.exceptions import NoSuchElementException
+from datetime import datetime
 
 
-def extract_news_data(driver, search_phrase):
+def get_total_pages(driver):
     try:
-        driver.refresh()
-        WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "promo-content"))
+        page_counts_element = driver.find_element(
+            By.CLASS_NAME, "search-results-module-page-counts"
         )
-        news_data = []
-        titles = driver.find_elements(By.CLASS_NAME, "promo-content")
+        page_counts_text = page_counts_element.text.strip()
+        total_pages = int(page_counts_text.split()[-1].replace(",", ""))
+        # 1 of x
+        return total_pages
+    except NoSuchElementException:
+        logging.info("Only one page found.")
+        return 1
+    except Exception as e:
+        logging.error(f"Error in get_total_pages: {str(e)}")
+        raise e
 
-        for title in titles:
-            title_element = title.find_element(By.CLASS_NAME, "promo-title")
+
+def extract_news_data(driver, search_phrase, months_to_consider):
+    try:
+        news_data = []
+        promo_wrappers = driver.find_elements(By.CLASS_NAME, "promo-wrapper")
+
+        for promo_wrapper in promo_wrappers:
+            date = extract_date(promo_wrapper)
+            if not date:
+                logging.warning("No date found for news item.")
+
+            if date not in months_to_consider:
+                logging.info(f"Skipping news item from {date}")
+                continue
+
+            image_url = extract_image(promo_wrapper)
+            if not image_url:
+                logging.warning("No image found for news item.")
+                continue
+
+            promo_content = promo_wrapper.find_element(By.CLASS_NAME, "promo-content")
+
+            title_element = promo_content.find_element(By.CLASS_NAME, "promo-title")
             title_text = title_element.text.strip()
             if not title_text:
-                raise ValueError("Failed to extract title from news")
+                logging.warning("No title found for news item.")
+                continue
 
-            description = extract_description(title)
-            date = extract_date(title)
-            image_url = extract_image(driver, title_text)
-
-            if not image_url:
-                logging.warning(f"Failed to extract image for {title_text}")
-                image_url = "No image available"
+            description = (
+                extract_description(promo_content) or "No description available."
+            )
 
             words_count = description.lower().count(search_phrase.lower())
-            title_description = str.join(" ", [title_text, description])
+            title_description = " ".join([title_text, description])
             match = re.search(r"\$|dollars|USD", title_description.lower())
             news_item = {
                 "title": title_text,
@@ -49,23 +75,22 @@ def extract_news_data(driver, search_phrase):
         return news_data
     except Exception as e:
         logging.error(f"Error in extract_news_data: {str(e)}")
-        return news_data
+        raise e("Error in extract_news_data: " + str(e))
 
 
-def extract_description(title):
+def extract_description(promo):
     try:
-        description_element = title.find_element(By.CLASS_NAME, "promo-description")
+        description_element = promo.find_element(By.CLASS_NAME, "promo-description")
         description = description_element.text.strip() if description_element else ""
         logging.info(f"Extracted description from news: {description}")
         return description
     except Exception as e:
         logging.error(f"Failed to extract description from news: {str(e)}")
-        raise e("Failed to extract description from news: " + str(e))
 
 
-def extract_date(title):
+def extract_date(promo):
     try:
-        timestamp_element = title.find_element(By.CLASS_NAME, "promo-timestamp")
+        timestamp_element = promo.find_element(By.CLASS_NAME, "promo-timestamp")
         if not timestamp_element:
             logging.error("Failed to extract timestamp from news")
             raise ValueError("Failed to extract timestamp from news")
@@ -78,15 +103,18 @@ def extract_date(title):
         raise e("Failed to extract date from news: " + str(e))
 
 
-def extract_image(driver, title):
+def extract_image(promo):
     try:
-        image = driver.find_element(By.CLASS_NAME, "image")
-        image_url = image.get_attribute("src")
+        image_element = promo.find_element(By.CLASS_NAME, "image")
+        image_url = image_element.get_attribute("src")
         response = requests.get(image_url)
 
         if response.status_code == 200:
-            filename = f"{title.replace(' ', '_')}.jpg"
-            directory = "pictures"
+            try:
+                filename = f"{promo.text.split('\n')[1].split('.')[0][:10]}.jpg"
+            except IndexError:
+                filename = f"{promo.text.replace(' ', '_')[:10]}.jpg"
+            directory = "output/pictures"
             if not os.path.exists(directory):
                 os.makedirs(directory)
             with open(os.path.join(directory, filename), "wb") as file:
@@ -104,7 +132,10 @@ def extract_image(driver, title):
 
 
 def format_timestamp(timestamp):
-    timestamp_seconds = int(timestamp) / 1000
-    dt_object = datetime.fromtimestamp(timestamp_seconds)
-    formatted_date = dt_object.strftime("%m/%d/%Y")
-    return formatted_date
+    try:
+        timestamp_seconds = int(timestamp) / 1000
+        dt_object = datetime.fromtimestamp(timestamp_seconds)
+        formatted_date = dt_object.strftime("%m/%Y")
+        return formatted_date
+    except Exception as e:
+        logging.error(f"Failed to format timestamp: {str(e)}")

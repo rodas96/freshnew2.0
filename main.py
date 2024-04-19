@@ -1,32 +1,74 @@
 import logging
 from initialization import initilization
 from setup_search import setup_search
-from scrapper import extract_news_data
-import json
+from scrapper import extract_news_data, get_total_pages
+import csv
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from tenacity import retry, stop_after_attempt, wait_fixed
+from time import sleep
+from date_utils import generate_month_year_list
+
+
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(5))
+def navigate_to_page(driver, page_url):
+    driver.get(page_url)
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "promo-content"))
+    )
+
+
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(5))
+def extract_data_with_retry(driver, search_phrase, months_to_consider):
+    return extract_news_data(driver, search_phrase, months_to_consider)
 
 
 def main():
     try:
         url = "https://www.latimes.com"
         driver, params = initilization()
-        driver.maximize_window()
         if not url:
             logging.warning("No URL provided.")
             raise ValueError("No URL provided.")
-        # Prepare search phrase topic, type and select sort by according to params specified
-        setup_search(driver, url, params)
-        news_data = extract_news_data(driver, params["search_phrase"])
-        with open("news_data.json", "w") as f:
-            json.dump(news_data, f, indent=4)
-        driver.quit()
-        print("Scraping completed successfully.")
+        current_url = setup_search(driver, url, params)
+        sleep(10)  # Wait for correct number of pages to load after filtering
+        pages_count = get_total_pages(driver)
+        months_to_consider = generate_month_year_list(params["months_back"])
+        news_data = []
+        for number in range(1, pages_count + 1):
+            page_url = f"{current_url}&p={number}"
+            try:
+                navigate_to_page(driver, page_url)
+                extracted_data = extract_data_with_retry(
+                    driver, params["search_phrase"], months_to_consider
+                )
+                news_data.extend(extracted_data)
+            except Exception as e:
+                logging.error(f"Error extracting data from page {number}: {str(e)}")
+                continue
 
-        # Finalization steps
-        logging.info("Scraping completed successfully.")
+        # Write data to CSV file
+        with open("output/news_data.csv", "w", newline="", encoding="utf-8") as csvfile:
+            fieldnames = [
+                "title",
+                "description",
+                "date",
+                "image_url",
+                "words_count",
+                "has_dollar",
+            ]
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            for item in news_data:
+                writer.writerow(item)
+
+        driver.quit()
+        logging.info("Data extracted successfully.")
 
     except Exception as e:
+        logging.error(f"An error occurred: {str(e)}")
         driver.quit()
-        logging.error(f"Error in main: {str(e)}")
         raise e
 
 
