@@ -1,12 +1,5 @@
 tasks:
   Run Python:
-    shell: python3 main.py
-
-condaConfigFile: conda.yaml
-artifactsDir: output
-PATH:
-  - .
-PYTHONPATH:
-  - .
-ignoreFiles:
-  - .gitignore
+    command:
+      - python
+      - main.py
