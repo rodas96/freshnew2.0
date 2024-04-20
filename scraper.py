@@ -11,6 +11,14 @@ from datetime import datetime
 from tenacity import retry, stop_after_attempt, wait_fixed
 
 
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(5))
+def navigate_to_page(driver, page_url):
+    driver.get(page_url)
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "promo-content"))
+    )
+
+
 def get_total_pages(driver):
     try:
         page_counts_element = driver.find_element(

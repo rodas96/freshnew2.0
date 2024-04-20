@@ -1,7 +1,7 @@
 import logging
 from initialization import initilization
 from setup_search import setup_search
-from scraper import extract_news_data, get_total_pages
+from scraper import extract_news_data, get_total_pages, navigate_to_page
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -21,14 +21,6 @@ output_path = "output/news_data.csv"
 news_data = []
 
 
-@retry(stop=stop_after_attempt(3), wait=wait_fixed(5))
-def navigate_to_page(driver, page_url):
-    driver.get(page_url)
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.CLASS_NAME, "promo-content"))
-    )
-
-
 def main():
     try:
         url = "https://www.latimes.com"
@@ -38,11 +30,16 @@ def main():
             raise ValueError("No URL provided.")
         current_url = setup_search(driver, url, params)
         sleep(
-            10
+            6
         )  # Wait for correct number of pages to load after filtering its visible anyway but the data is not loadedto count the pages
         pages_count = get_total_pages(driver)
+        max_pages = min(
+            pages_count, 25
+        )  # define here if want to check the time of extraction for a large quantity like 1k 5k 10k images and news.
+        logging.info(f"Total pages to extract: {pages_count}")
         months_to_consider = relevant_months(params["months_back"])
-        for number in range(1, pages_count + 1):
+        logging.info(f"Months to consider extracting the news: {months_to_consider}")
+        for number in range(1, max_pages + 1):
             page_url = f"{current_url}&p={number}"
             try:
                 navigate_to_page(driver, page_url)
@@ -65,7 +62,6 @@ def main():
         logging.info("Data extracted successfully.")
 
     except Exception as e:
-        write_to_csv(news_data, cols_name, output_path)
         logging.error(f"An error occurred: {str(e)}")
         driver.quit()
         raise e

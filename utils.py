@@ -23,3 +23,5 @@ def write_to_csv(data, fieldnames, file_path):
         writer.writeheader()
         writer.writerows(data)
         logging.info(f"Data written to {file_path} successfully.")
+        
+

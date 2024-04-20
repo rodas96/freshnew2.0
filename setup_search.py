@@ -4,14 +4,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from tenacity import retry, stop_after_attempt, wait_fixed
-from selenium.common.exceptions import NoSuchElementException
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(5))
 def setup_search(driver, url, params):
     try:
         search(driver, url, params)
-        select_topic_type(driver, params)
+        select_topic(driver, params)
         sort_by(driver, params)
         logging.info("Search setup completed successfully.")
         driver.refresh()
@@ -47,37 +46,30 @@ def search(driver, url, params):
         raise e
 
 
-@retry(stop=stop_after_attempt(5), wait=wait_fixed(4))
-def select_topic_type(driver, params):
+def select_topic(driver, params):
     try:
         if not params["news_topic"]:
             raise ValueError("No news topic specified.")
-        if not params["news_type"]:
-            raise ValueError("No news type specified.")
 
         topic_name = params.get("news_topic")
-        type_name = params.get("news_type")
-
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable(
+                (
+                    By.XPATH,
+                    f"//label[contains(@class, 'checkbox-input-label')]/span[text()='{topic_name}']/preceding-sibling::input[@type='checkbox']",
+                )
+            )
+        )
         check_topic = driver.find_element(
             By.XPATH,
             f"//label[contains(@class, 'checkbox-input-label')]/span[text()='{topic_name}']/preceding-sibling::input[@type='checkbox']",
         )
-        check_topic.click()
-        check_type = driver.find_element(
-            By.XPATH,
-            f"//label[contains(@class, 'checkbox-input-label') and .//span[text()='{type_name}']]/input[@type='checkbox']",
-        )
-        check_type.click()
-
-    except NoSuchElementException as e:
-        logging.error(f"Element not found: {str(e)}")
-        raise e
-    except ValueError as e:
-        logging.error(str(e))
-        raise e
+        driver.execute_script(
+            "arguments[0].click();", check_topic
+        )  # somehow click works sometimes reduces the retrys
     except Exception as e:
         logging.error(f"Error in select_topic_type: {str(e)}")
-        raise RuntimeError("Error in select_topic_type: " + str(e))
+        raise e("Error in select_topic_type: " + str(e))
 
 
 def sort_by(driver, params):
