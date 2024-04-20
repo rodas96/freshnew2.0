@@ -52,8 +52,8 @@ def select_topic(driver, params):
             raise ValueError("No news topic specified.")
 
         topic_name = params.get("news_topic")
-        WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable(
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located(
                 (
                     By.XPATH,
                     f"//label[contains(@class, 'checkbox-input-label')]/span[text()='{topic_name}']/preceding-sibling::input[@type='checkbox']",
@@ -64,12 +64,10 @@ def select_topic(driver, params):
             By.XPATH,
             f"//label[contains(@class, 'checkbox-input-label')]/span[text()='{topic_name}']/preceding-sibling::input[@type='checkbox']",
         )
-        driver.execute_script(
-            "arguments[0].click();", check_topic
-        )  # somehow click works sometimes reduces the retrys
+        check_topic.click()
     except Exception as e:
-        logging.error(f"Error in select_topic_type: {str(e)}")
-        raise e("Error in select_topic_type: " + str(e))
+        logging.error(f"Error in select_topic: {str(e)}")
+        raise e("Error in select_topic: " + str(e))
 
 
 def sort_by(driver, params):
