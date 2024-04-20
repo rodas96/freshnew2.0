@@ -27,6 +27,7 @@ def get_total_pages(driver):
         raise e
 
 
+# MISSING pass the sort_by if newest sort by applied doesnt make sense to keep going searching for the next page when the date already found isn't relevant
 def extract_news_data(driver, search_phrase, months_to_consider):
     try:
         news_data = []

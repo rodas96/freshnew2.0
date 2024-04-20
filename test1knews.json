@@ -1,7 +1,7 @@
 {
     "search_phrase": "surf",
     "news_topic": "California",
-    "news_type": "Gallery",
-    "months_back": 2,
+    "news_type": "Video",
+    "months_back": 5,
     "sort_by": "Newest"
 }
