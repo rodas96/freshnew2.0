@@ -1,24 +1,19 @@
-from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import csv
 import logging
 
 
-def get_month_year_back(months_back):
+def relevant_months(months_back):
     current_date = datetime.now()
-    target_date = current_date - timedelta(days=months_back * 30)
-    return target_date.month, target_date.year
+    target_date = current_date
+    target_date -= relativedelta(months=months_back - 1)
 
-
-def generate_month_year_list(months_back):
-    current_month, current_year = datetime.now().month, datetime.now().year
     month_year_list = []
-    for i in range(months_back + 1):
-        month = current_month - i
-        year = current_year
-        while month <= 0:
-            month += 12
-            year -= 1
-        month_year_list.append(datetime(current_year, month, 1).strftime("%m/%Y"))
+    while target_date <= current_date:
+        month_year_list.append(target_date.strftime("%m/%Y"))
+        target_date += relativedelta(months=1)
+
     return month_year_list
 
 

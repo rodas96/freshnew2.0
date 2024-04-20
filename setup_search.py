@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from tenacity import retry, stop_after_attempt, wait_fixed
+from selenium.common.exceptions import NoSuchElementException
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(5))
@@ -46,57 +47,37 @@ def search(driver, url, params):
         raise e
 
 
+@retry(stop=stop_after_attempt(5), wait=wait_fixed(4))
 def select_topic_type(driver, params):
     try:
         if not params["news_topic"]:
-            logging.warning("No news topic specified.")
+            raise ValueError("No news topic specified.")
         if not params["news_type"]:
-            logging.warning("No news type specified.")
+            raise ValueError("No news type specified.")
 
         topic_name = params.get("news_topic")
         type_name = params.get("news_type")
-        topic_selected = False
-        type_selected = False
-        checkboxes = driver.find_elements(
-            By.CSS_SELECTOR, "label.checkbox-input-label > span"
+
+        check_topic = driver.find_element(
+            By.XPATH,
+            f"//label[contains(@class, 'checkbox-input-label')]/span[text()='{topic_name}']/preceding-sibling::input[@type='checkbox']",
         )
+        check_topic.click()
+        check_type = driver.find_element(
+            By.XPATH,
+            f"//label[contains(@class, 'checkbox-input-label') and .//span[text()='{type_name}']]/input[@type='checkbox']",
+        )
+        check_type.click()
 
-        for checkbox in checkboxes:
-            if topic_name and not topic_selected and checkbox.text == topic_name:
-                checkbox_input = checkbox.find_element(
-                    By.XPATH, "./preceding-sibling::input[@type='checkbox']"
-                )
-                if checkbox_input.is_displayed() and not checkbox_input.is_selected():
-                    checkbox_input.click()
-                    logging.info(f"Topic checkbox '{topic_name}' selected.")
-                    topic_selected = True
-                    WebDriverWait(driver, 20).until(
-                        EC.visibility_of_all_elements_located(
-                            (By.CLASS_NAME, "search-filter-menu-wrapper")
-                        )
-                    )
-
-            if type_name and not type_selected and checkbox.text == type_name:
-                checkbox_input = checkbox.find_element(
-                    By.XPATH, "./preceding-sibling::input[@type='checkbox']"
-                )
-                if checkbox_input.is_displayed() and not checkbox_input.is_selected():
-                    checkbox_input.click()
-                    logging.info(f"Type checkbox '{type_name}' selected.")
-                    type_selected = True
-
-            if topic_selected and type_selected:
-                break
-
-        if topic_name and not topic_selected:
-            logging.warning(f"Checkbox element not found for topic '{topic_name}'.")
-        if type_name and not type_selected:
-            logging.warning(f"Checkbox element not found for type '{type_name}'.")
-        logging.info("News topic and type selected successfully.")
-
+    except NoSuchElementException as e:
+        logging.error(f"Element not found: {str(e)}")
+        raise e
+    except ValueError as e:
+        logging.error(str(e))
+        raise e
     except Exception as e:
         logging.error(f"Error in select_topic_type: {str(e)}")
-        raise e("Error in select_topic_type: " + str(e))
+        raise RuntimeError("Error in select_topic_type: " + str(e))
 
 
 def sort_by(driver, params):
@@ -108,7 +89,7 @@ def sort_by(driver, params):
         sort_by_value = params["sort_by"]
         select = Select(driver.find_element(By.CLASS_NAME, "select-input"))
         select.select_by_visible_text(sort_by_value)
-        logging.info(f"Option '{sort_by_value}' selected in the sort by dropdown.")
+        logging.info(f"Sorted by '{sort_by_value}'")
 
     except Exception as e:
         logging.warning(f"Not possible to sort_by: {str(e)}")

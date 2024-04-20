@@ -8,6 +8,7 @@ from datetime import datetime
 import re
 from selenium.common.exceptions import NoSuchElementException
 from datetime import datetime
+from tenacity import retry, stop_after_attempt, wait_fixed
 
 
 def get_total_pages(driver):
@@ -18,6 +19,7 @@ def get_total_pages(driver):
         page_counts_text = page_counts_element.text.strip()
         total_pages = int(page_counts_text.split()[-1].replace(",", ""))
         # 1 of x
+        logging.info(f"Total pages found: {total_pages}")
         return total_pages
     except NoSuchElementException:
         logging.info("Only one page found.")
@@ -27,11 +29,12 @@ def get_total_pages(driver):
         raise e
 
 
-# MISSING pass the sort_by if newest sort by applied doesnt make sense to keep going searching for the next page when the date already found isn't relevant
-def extract_news_data(driver, search_phrase, months_to_consider):
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(5))
+def extract_news_data(driver, search_phrase, months_to_consider, sort_by):
     try:
         news_data = []
         promo_wrappers = driver.find_elements(By.CLASS_NAME, "promo-wrapper")
+        date_over = False
 
         for promo_wrapper in promo_wrappers:
             date = extract_date(promo_wrapper)
@@ -39,6 +42,13 @@ def extract_news_data(driver, search_phrase, months_to_consider):
                 logging.warning("No date found for news item.")
 
             if date not in months_to_consider:
+                if sort_by == "newest":
+                    logging.info(f"Reached old news. Stopping the extraction.")
+                    date_over = True
+                    logging.info(
+                        "Sorted by newest found the date limit, stopping the extraction."
+                    )
+                    return news_data, date_over
                 logging.info(f"Skipping news item from {date}")
                 continue
 
@@ -83,7 +93,6 @@ def extract_description(promo):
     try:
         description_element = promo.find_element(By.CLASS_NAME, "promo-description")
         description = description_element.text.strip() if description_element else ""
-        logging.info(f"Extracted description from news: {description}")
         return description
     except Exception as e:
         logging.error(f"Failed to extract description from news: {str(e)}")
@@ -97,7 +106,6 @@ def extract_date(promo):
             raise ValueError("Failed to extract timestamp from news")
         timestamp = timestamp_element.get_attribute("data-timestamp")
         formatted_date = format_timestamp(timestamp)
-        logging.info(f"Extracted timestamp from news: {formatted_date}")
         return formatted_date
     except Exception as e:
         logging.error(f"Failed to extract date from news: {str(e)}")
@@ -126,7 +134,6 @@ def extract_image(promo):
             with open(os.path.join(directory, filename), "wb") as file:
                 file.write(response.content)
 
-            logging.info(f"Image downloaded and saved as {filename} in {directory}")
             return os.path.join(directory, filename)
         else:
             logging.warning(f"Failed to download image: {response.status_code}")

@@ -43,6 +43,7 @@ def init_driver():
 
         driver = webdriver.Chrome(options=chrome_options)
         if not driver:
+            logging.error("Failed to initialize WebDriver")
             raise Exception("Failed to initialize WebDriver")
         return driver
     except Exception as e:
@@ -71,7 +72,5 @@ def kill_chrome():
         os.system("taskkill /f /im chrome.exe")
     elif system == "Linux":
         os.system("pkill chrome")
-    elif system == "Darwin":  # macOS
+    elif system == "Darwin":
         os.system("pkill -f 'Google Chrome'")
-    else:
-        print("Unsupported operating system.")
