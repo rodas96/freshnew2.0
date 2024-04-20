@@ -3,3 +3,8 @@ tasks:
     command:
       - python
       - main.py
+condaConfigFile: conda.yaml
+artifactsDir: output
+ignoreFiles:
+  - .gitignore
+  - requeriements.txt
