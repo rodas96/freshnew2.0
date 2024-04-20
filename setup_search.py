@@ -56,13 +56,13 @@ def select_topic(driver, params):
             EC.presence_of_element_located(
                 (
                     By.XPATH,
-                    f"//label[contains(@class, 'checkbox-input-label')]/span[text()='{topic_name}']/preceding-sibling::input[@type='checkbox']",
+                    f"//label[contains(@class, 'checkbox-input-label') and span[text()='{topic_name}']]/input[@type='checkbox']",
                 )
             )
         )
         check_topic = driver.find_element(
             By.XPATH,
-            f"//label[contains(@class, 'checkbox-input-label')]/span[text()='{topic_name}']/preceding-sibling::input[@type='checkbox']",
+            f"//label[contains(@class, 'checkbox-input-label') and span[text()='{topic_name}']]/input[@type='checkbox']",
         )
         check_topic.click()
     except Exception as e:
