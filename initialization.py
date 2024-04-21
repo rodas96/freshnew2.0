@@ -5,6 +5,7 @@ from selenium import webdriver
 import platform
 import os
 from selenium.webdriver.chrome.options import Options
+from robocorp import workitems
 
 
 def initilization():
@@ -55,10 +56,17 @@ def init_driver():
 
 def load_params():
     try:
-        with open("test1knews.json", "r") as f:
-            params = json.load(f)
+        if workitems.input.current:
+            params = workitems.input.current
             if not params.get("search_phrase"):
+                print("No search phrase provided in params.json")
                 raise ValueError("No search phrase provided in params.json")
+        else:
+            raise ("testing robocorp")
+            with open("test1knews.json", "r") as f:
+                params = json.load(f)
+                if not params.get("search_phrase"):
+                    raise ValueError("No search phrase provided in params.json")
         return params
     except FileNotFoundError:
         logging.error("params.json not found")
