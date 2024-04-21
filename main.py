@@ -34,9 +34,11 @@ def main():
         )  # Wait for correct number of pages to load after filtering its visible anyway but the data is not loadedto count the pages
         pages_count = get_total_pages(driver)
         max_pages = min(
-            pages_count, 25
+            pages_count, 15
         )  # define here if want to check the time of extraction for a large quantity like 1k 5k 10k images and news.
-        logging.info(f"Total pages to extract: {pages_count}")
+        logging.info(
+            f"Total pages to extract: {pages_count}" + f" and extracting {max_pages}"
+        )
         months_to_consider = relevant_months(params["months_back"])
         logging.info(f"Months to consider extracting the news: {months_to_consider}")
         for number in range(1, max_pages + 1):
