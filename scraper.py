@@ -91,7 +91,7 @@ def extract_news_data(driver, search_phrase, months_to_consider, sort_by):
             news_data.append(news_item)
 
         logging.info("News data extracted successfully.")
-        return news_data
+        return news_data, date_over
     except Exception as e:
         logging.error(f"Error in extract_news_data: {str(e)}")
         raise e("Error in extract_news_data: " + str(e))
