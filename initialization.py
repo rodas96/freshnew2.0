@@ -56,8 +56,8 @@ def init_driver():
 
 def load_params():
     try:
-        if workitems.input.current:
-            params = workitems.input.current
+        if workitems.inputs.current:
+            params = workitems.inputs.current.payload
             if not params.get("search_phrase"):
                 print("No search phrase provided in params.json")
                 raise ValueError("No search phrase provided in params.json")
