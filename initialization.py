@@ -56,17 +56,17 @@ def init_driver():
 
 def load_params():
     try:
-        if workitems.inputs.current:
-            params = workitems.inputs.current.payload
+        # if workitems.inputs.current:
+        #     params = workitems.inputs.current.payload
+        #     if not params.get("search_phrase"):
+        #         print("No search phrase provided in params.json")
+        #         raise ValueError("No search phrase provided in params.json")
+        # else:
+        #     raise ("testing robocorp")
+        with open("test1knews.json", "r") as f:
+            params = json.load(f)
             if not params.get("search_phrase"):
-                print("No search phrase provided in params.json")
                 raise ValueError("No search phrase provided in params.json")
-        else:
-            raise ("testing robocorp")
-            with open("test1knews.json", "r") as f:
-                params = json.load(f)
-                if not params.get("search_phrase"):
-                    raise ValueError("No search phrase provided in params.json")
         return params
     except FileNotFoundError:
         logging.error("params.json not found")

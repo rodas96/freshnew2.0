@@ -52,6 +52,10 @@ def select_topic(driver, params):
             raise ValueError("No news topic specified.")
 
         topic_name = params.get("news_topic")
+
+        see_all = driver.find_element(By.CSS_SELECTOR, "button.button.see-all-button")
+        see_all.click()
+
         WebDriverWait(driver, 20).until(
             EC.presence_of_element_located(
                 (
